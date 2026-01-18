@@ -85,21 +85,21 @@ app.put("/todos/:id", (req, res) => {
         return res.status(404).json({ error: "todo non trouvé"});
     }
 
-    // réponse finale envoyée au client 
-    res.json({
-        message: "To do mise à jour",
-        updated: {
-            id,
-            title,
-            completed,
-        },
-    });
+    db.get(
+        "SELECT * FROM todos WHERE id = ?",
+        [id],
+        (err, row) => {
+          if (err) {
+            return res.status(500).json({ error: "Erreur serveur" });
+          }
+          res.json(row);
+        });
     });
 });
 
 // route DELETE pour supprimer une tâche 
 app.delete("/todos/:id", (req, res) => {
-    const {id} = require.params;
+    const {id} = req.params;
 
     const sql= "DELETE FROM todos WHERE id = ?";
 

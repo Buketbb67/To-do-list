@@ -32,27 +32,93 @@ function App() {
     console.error(err);
   }
 };
-  
+
+  const handleDeleteTodo = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:5000/todos/${id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    }); 
+    
+    if (!response.ok) throw new Error("Erreur supprimer todo");
+     
+    setTodos(
+        todos.filter(todo => todo.id !== id)
+    );
+
+  } catch (err) {
+    console.error(err);
+  }
+
+  };
+
+  const handleToggleTodo = async (todo) => {
+  try {
+    const response = await fetch(
+      `http://localhost:5000/todos/${todo.id}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          completed: todo.completed === 1 ? 0 : 1,
+        }),
+      }
+    );
+
+    if (!response.ok) throw new Error("Erreur modification");
+
+    const updatedTodo = await response.json();
+
+    setTodos(todos.map((prevTodos) =>
+        prevTodos.id === updatedTodo.id ? updatedTodo : prevTodos
+      )
+    );
+  } catch (err) {
+    console.error(err);
+  }
+};
+
   return (
   <div>
         <h1 className= "text-4xl text-blue-600">My to do list</h1>
-        <ul className= "text-blue-600">
-          {todos.map((todo)=> (
-            <li key={todo.id}>{todo.title}</li>
+        <ul className="text-blue-600">
+          {todos.map((todo) => (
+          <li
+              key={todo.id}
+              className="flex items-center gap-2"
+          >
+            <input
+              type="checkbox"
+              checked={todo.completed === 1}
+              onChange={() => 
+                handleToggleTodo(todo)}
+            />
+
+            <span>
+              {todo.title}
+            </span>
+
+            <button
+            className= "bg-blue-600 text-white px-4 py-2 rounded"
+            onClick={() => handleDeleteTodo(todo.id)}>
+             Delete
+            </button>
+          </li>
           ))}
         </ul>
+
         <div className= "flex gap-2 mb-4">
         <input 
         type="text"
         className="border p-2 flex-1 rounded"
-        placeholder="Nouvelle to do"
+        placeholder="Add a to do"
         value={newTodo}
         onChange={(e) => setNewTodo(e.target.value)}
         />
         <button 
-        className="bg-blue-500 text-white px-4 py-2 rounded"
+        className="bg-blue-600 text-white px-4 py-2 rounded"
         onClick={handleAddTodo}>
-          Ajouter
+          Add
         </button>
         </div>
 
