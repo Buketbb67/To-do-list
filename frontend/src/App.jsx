@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { fetchTodos } from './api/todos';
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -79,16 +78,18 @@ function App() {
 };
 
   return (
-  <div>
-        <h1 className= "text-4xl text-blue-600">My to do list</h1>
-        <ul className="text-blue-600">
+  <div className= "flex flex-col basis-1/2 m-10 p-11 border rounded shadow-lg content-center space-y-8 bg-[#FDF8FD]">
+          <h1 className= "text-8xl text-[#953EA3]">My to do list</h1>
+        <div className="flex items-center gap-4 space-y-4">
+        <ul className="text-2xl text-[#745D52] space-y-4">
           {todos.map((todo) => (
           <li
               key={todo.id}
-              className="flex items-center gap-2"
+              
           >
             <input
               type="checkbox"
+              className= "accent-[#953EA3] rounded-xl mr-4 scale-150"
               checked={todo.completed === 1}
               onChange={() => 
                 handleToggleTodo(todo)}
@@ -99,24 +100,24 @@ function App() {
             </span>
 
             <button
-            className= "bg-blue-600 text-white px-4 py-2 rounded"
+            className= "bg-[#A58476] text-white px-4 py-2 rounded-xl ml-4 scale-90"
             onClick={() => handleDeleteTodo(todo.id)}>
              Delete
             </button>
           </li>
           ))}
         </ul>
-
-        <div className= "flex gap-2 mb-4">
+        </div>
+        <div className= "flex gap-2 mb-4 ">
         <input 
         type="text"
-        className="border p-2 flex-1 rounded"
+        className="border p-2 flex-1 rounded-xl placeholder:text-[#745D52] focus:outline-none focus:ring-2 focus:ring-[#A58476]"
         placeholder="Add a to do"
         value={newTodo}
         onChange={(e) => setNewTodo(e.target.value)}
         />
         <button 
-        className="bg-blue-600 text-white px-4 py-2 rounded"
+        className="bg-[#A58476] text-white px-4 py-2 rounded-md ml-4 scale-125"
         onClick={handleAddTodo}>
           Add
         </button>
